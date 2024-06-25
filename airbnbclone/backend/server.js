@@ -76,6 +76,25 @@ app.get('/api/getALLlistings', async (req, res) => {
     }
   });
 
+  // API endpoint to fetch user's name by email
+app.get('/api/userName', async (req, res) => {
+    const { email } = req.query;
+    
+    try {
+      // Simulate fetching user data from a remote service or database
+      const user = User.find(user => user.email === email);
+      
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      res.json({ name: user.name });
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
+  
   // Express route to fetch a listing by ID
 app.get('/api/listings/:id', async (req, res) => {
     const { id } = req.params;
@@ -104,6 +123,51 @@ app.post('/signup', async (req, res) => {
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: 'Failed to sign up user.' });
+  }
+});
+// Reservation schema and model
+const ReservationSchema = new mongoose.Schema({
+    listingId: String,
+    userEmail: String,
+    userName: String,
+    userContact: String,
+    hostEmail: String,
+    checkInDate: String,
+    checkOutDate: String,
+    guests: Number
+  });
+const Reservation = mongoose.model('Reservation', ReservationSchema);
+
+// API endpoint to store reservations
+app.post('/api/reservations', async (req, res) => {
+  try {
+    const {
+      listingId,
+      userEmail,
+      userName,
+      userContact,
+      hostEmail,
+      checkInDate,
+      checkOutDate,
+      guests
+    } = req.body;
+
+    const newReservation = new Reservation({
+      listingId,
+      userEmail,
+      userName,
+      userContact,
+      hostEmail,
+      checkInDate,
+      checkOutDate,
+      guests
+    });
+
+    await newReservation.save();
+    res.status(201).json({ message: 'Reservation stored successfully' });
+  } catch (error) {
+    console.error('Error storing reservation:', error);
+    res.status(500).json({ error: 'Failed to store reservation' });
   }
 });
 
