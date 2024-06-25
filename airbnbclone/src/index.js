@@ -8,6 +8,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import UserDashboard from './userDashboard';
+import Step1 from './components/airbnbYourHome/step1';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,9 @@ const router = createBrowserRouter([
   {
     path : '/dashboard',
     element : <UserDashboard />
+  },{
+    path : '/list/step1',
+    element : <Step1 />
   }
 ]);
 

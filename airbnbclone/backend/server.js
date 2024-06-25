@@ -113,6 +113,75 @@ app.post('/logout', (req, res) => {
   });
 });
 
+
+// Define Schema and Model for Property Listing
+const PropertySchema = new mongoose.Schema({
+    propertyType: String,
+    guestType: String,
+    address: String,
+    guests: Number,
+    bedrooms: Number,
+    beds: Number,
+    lockType: String,
+    bathroomType: String,
+    presence: {
+      me: Boolean,
+      family: Boolean,
+      otherGuests: Boolean,
+      roommates: Boolean,
+    },
+    imageLinks: [String],
+    price: Number,
+    hostEmail: String,
+  });
+  
+  const Property = mongoose.model('Property', PropertySchema);
+  
+  // POST endpoint to handle publishing a listing
+  app.post('/api/publishListing', async (req, res) => {
+    try {
+      const {
+        propertyType,
+        guestType,
+        address,
+        guests,
+        bedrooms,
+        beds,
+        lockType,
+        bathroomType,
+        presence,
+        imageLinks,
+        price,
+        hostEmail,
+      } = req.body;
+  
+      // Create new Property document
+      const newProperty = new Property({
+        propertyType,
+        guestType,
+        address,
+        guests,
+        bedrooms,
+        beds,
+        lockType,
+        bathroomType,
+        presence,
+        imageLinks,
+        price,
+        hostEmail,
+      });
+  
+      // Save the property to MongoDB
+      await newProperty.save();
+  
+      // Respond with success message
+      res.status(200).json({ message: 'Listing published successfully' });
+    } catch (error) {
+      console.error('Error publishing listing:', error);
+      res.status(500).json({ error: 'Failed to publish listing' });
+    }
+  });
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

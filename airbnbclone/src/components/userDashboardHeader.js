@@ -31,6 +31,8 @@ import AppleIcon from '@mui/icons-material/Apple';
 import Snackbar from '@mui/material/Snackbar';
 import SnackbarContent from '@mui/material/SnackbarContent';
 import CloseIcon from '@mui/icons-material/Close';
+import SearchBar from './searchSection';
+import { Link } from 'react-router-dom';
 
 const UserDashboardHeader = () => {
   const theme = useTheme();
@@ -174,7 +176,8 @@ const UserDashboardHeader = () => {
           {/* Right Section with Globe and User for Larger Screens */}
           {!isSmallScreen && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Button style={{textTransform:"none"}}><Typography sx={{ fontWeight: 600 ,fontFamily:"Montserrat",color:"black"}}>Airbnb your home</Typography></Button>
+              <Link to={'/list/step1'} ><Button style={{textTransform:"none"}}><Typography sx={{ fontWeight: 600 ,fontFamily:"Montserrat",color:"black"}}>Airbnb your home</Typography></Button>
+              </Link>
               <IconButton color="inherit">
                 <LanguageIcon />
               </IconButton>
@@ -222,7 +225,6 @@ const UserDashboardHeader = () => {
         <MenuItem>Logout</MenuItem>
       </Menu>
 
-  
     </>
   );
 };
