@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
+import axios from 'axios';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -18,7 +19,6 @@ import '../index.css';
 import LanguageIcon from '@mui/icons-material/Language';
 import MenuIcon from '@mui/icons-material/Menu';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -46,9 +46,11 @@ const Header = () => {
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handlePhoneChange = (value) => {
     setFormData({ ...formData, phone: value });
   };
+
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
@@ -80,16 +82,36 @@ const Header = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSignupSubmit = () => {
-    // Handle signup logic here
-    console.log('Signup Data:', formData);
-    handleSignupClose();
+  const handleSignupSubmit = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/signup', {
+        phone: formData.phone,
+        email: formData.email,
+        name: formData.name,
+        password: formData.password,
+      });
+      console.log('Signup Successful:', response.data);
+      handleSignupClose(); // Close the dialog or perform other actions on success
+      // Optionally, you can set state or handle success feedback here
+    } catch (error) {
+      console.error('Signup Error:', error);
+      // Handle error cases (e.g., show error message to user)
+    }
   };
 
-  const handleLoginSubmit = () => {
-    // Handle login logic here
-    console.log('Login Data:', formData);
-    handleLoginClose();
+  const handleLoginSubmit = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/login', {
+        email: formData.email,
+        password: formData.password,
+      });
+      console.log('Login Successful:', response.data);
+      handleLoginClose(); // Close the dialog or perform other actions on success
+      // Optionally, you can set state or handle success feedback here
+    } catch (error) {
+      console.error('Login Error:', error);
+      // Handle error cases (e.g., show error message to user)
+    }
   };
 
   return (
@@ -158,21 +180,20 @@ const Header = () => {
         <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
       </Menu>
 
-         {/* Signup Dialog */}
-         <Dialog
+      {/* Signup Dialog */}
+      <Dialog
         open={signupOpen}
         onClose={handleSignupClose}
         maxWidth="md"
         fullWidth
-        sx={{ '& .MuiDialog-paper': { minHeight: '450px',width:"450px" } }}
+        sx={{ '& .MuiDialog-paper': { minHeight: '450px', width: "450px" } }}
       >
-        <DialogTitle><Typography sx={{fontFamily:"Montserrat",fontWeight:"700"}}>{phoneStep ? 'Sign Up' : 'Sign Up Details'}</Typography></DialogTitle>
-       <hr></hr>
+        <DialogTitle><Typography sx={{ fontFamily: "Montserrat", fontWeight: "700" }}>{phoneStep ? 'Sign Up' : 'Sign Up Details'}</Typography></DialogTitle>
+        <hr></hr>
         <DialogContent>
-            <Typography sx={{fontFamily:"Montserrat",fontWeight:'700',
-        fontSize:"1.5rem"}}>Welcome to AirBnb</Typography>
+          <Typography sx={{ fontFamily: "Montserrat", fontWeight: '700', fontSize: "1.5rem" }}>Welcome to AirBnb</Typography>
           <DialogContentText>
-            <Typography sx={{fontFamily:"Montserrat"}}>{phoneStep ? 'Enter your phone number to continue.' : 'Enter your details to complete the signup.'}</Typography>
+            <Typography sx={{ fontFamily: "Montserrat" }}>{phoneStep ? 'Enter your phone number to continue.' : 'Enter your details to complete the signup.'}</Typography>
           </DialogContentText>
           {phoneStep ? (
             <PhoneInput
@@ -221,48 +242,40 @@ const Header = () => {
             </>
           )}
 
-          <Typography sx={{fontSize:"0.7rem",mt:"1rem",fontFamily:"Montserrat"}}>We’ll call or text you to confirm your number. Standard message and data rates apply. <span style={{fontWeight:700}}>Privacy Policy</span></Typography>
-          <Box width="100%" textAlign={'center'} sx={{mt:"1rem"}}>
-    <Button
-      
-      variant="contained"
-      onClick={phoneStep ? handleContinue : handleSignupSubmit}
-      sx={{
-        backgroundColor: phoneStep ? "var(--red)" : undefined,
-        color: phoneStep ? "white" : undefined,
-        marginBottom: '8px', // Add space between buttons
-        width:"100%"
-      }}
-    >
-      {phoneStep ? 'Continue' : 'Sign Up'}
-    </Button>
-  </Box>
+          <Typography sx={{ fontSize: "0.7rem", mt: "1rem", fontFamily: "Montserrat" }}>We’ll call or text you to confirm your number. Standard message and data rates apply. <span style={{ fontWeight: 700 }}>Privacy Policy</span></Typography>
+          <Box width="100%" textAlign={'center'} sx={{ mt: "1rem" }}>
+            <Button
+              variant="contained"
+              onClick={phoneStep ? handleContinue : handleSignupSubmit}
+              sx={{
+                backgroundColor: phoneStep ? "var(--red)" : undefined,
+                color: phoneStep ? "white" : undefined,
+                marginBottom: '8px', // Add space between buttons
+                width: "100%"
+              }}
+            >
+              {phoneStep ? 'Continue' : 'Sign Up'}
+            </Button>
+          </Box>
 
-<Typography textAlign={'center'}>or</Typography>
-<Button  fullWidth variant="outlined" startIcon={<FacebookIcon />} style={{ marginTop: '8px' ,color:"black",fontFamily:"Montserrat",border:"1px solid #cccccc"}}>
-    Continue with Facebook
-  </Button>
-  <Button fullWidth variant="outlined" startIcon={<GoogleIcon />} style={{ marginTop: '8px' ,color:"black",fontFamily:"Montserrat",border:"1px solid #cccccc"}}>
-    Continue with Google
-  </Button>
-  <Button fullWidth variant="outlined" startIcon={<AppleIcon />} style={{ marginTop: '8px' ,color:"black",fontFamily:"Montserrat",border:"1px solid #cccccc"}}>
-    Continue with Apple
-  </Button>
+          <Typography textAlign={'center'}>or</Typography>
+          <Button fullWidth variant="outlined" startIcon={<FacebookIcon />} style={{ marginTop: '8px', color: "black", fontFamily: "Montserrat", border: "1px solid #cccccc" }}>
+            Continue with Facebook
+          </Button>
+          <Button fullWidth variant="outlined" startIcon={<GoogleIcon />} style={{ marginTop: '8px', color: "black", fontFamily: "Montserrat", border: "1px solid #cccccc" }}>
+            Continue with Google
+          </Button>
+          <Button fullWidth variant="outlined" startIcon={<AppleIcon />} style={{ marginTop: '8px', color: "black", fontFamily: "Montserrat", border: "1px solid #cccccc" }}>
+            Continue with Apple
+          </Button>
         </DialogContent>
-      
- 
-
-
       </Dialog>
 
-
-        {/* Login Dialog */}
-        <Dialog open={loginOpen} onClose={handleLoginClose} stlye={{fontFamily:"Montserrat"}}>
+      {/* Login Dialog */}
+      <Dialog open={loginOpen} onClose={handleLoginClose} style={{ fontFamily: "Montserrat" }}>
         <DialogTitle>Login</DialogTitle>
-        
         <DialogContent>
-        <Typography sx={{fontFamily:"Montserrat",fontWeight:'700',
-        fontSize:"1.5rem"}}>Welcome to AirBnb</Typography>
+          <Typography sx={{ fontFamily: "Montserrat", fontWeight: '700', fontSize: "1.5rem" }}>Welcome to AirBnb</Typography>
           <DialogContentText>
             Enter your email or phone number and password to login.
           </DialogContentText>
@@ -287,26 +300,24 @@ const Header = () => {
             value={formData.password}
             onChange={handleChange}
           />
-            <Button onClick={handleLoginSubmit}   sx={{
-        backgroundColor: phoneStep ? "var(--red)" : undefined,
-        color: phoneStep ? "white" : undefined,
-        marginBottom: '8px', // Add space between buttons
-        width:"100%",
-        mt:"1rem"
-      }}>Login</Button>
-<Typography textAlign={'center'}>or</Typography>
-<Button  fullWidth variant="outlined" startIcon={<FacebookIcon />} style={{ marginTop: '8px' ,color:"black",fontFamily:"Montserrat",border:"1px solid #cccccc"}}>
-    Continue with Facebook
-  </Button>
-  <Button fullWidth variant="outlined" startIcon={<GoogleIcon />} style={{ marginTop: '8px' ,color:"black",fontFamily:"Montserrat",border:"1px solid #cccccc"}}>
-    Continue with Google
-  </Button>
-  <Button fullWidth variant="outlined" startIcon={<AppleIcon />} style={{ marginTop: '8px' ,color:"black",fontFamily:"Montserrat",border:"1px solid #cccccc"}}>
-    Continue with Apple
-  </Button>
+          <Button onClick={handleLoginSubmit} sx={{
+            backgroundColor: phoneStep ? "var(--red)" : undefined,
+            color: phoneStep ? "white" : undefined,
+            marginBottom: '8px', // Add space between buttons
+            width: "100%",
+            mt: "1rem"
+          }}>Login</Button>
+          <Typography textAlign={'center'}>or</Typography>
+          <Button fullWidth variant="outlined" startIcon={<FacebookIcon />} style={{ marginTop: '8px', color: "black", fontFamily: "Montserrat", border: "1px solid #cccccc" }}>
+            Continue with Facebook
+          </Button>
+          <Button fullWidth variant="outlined" startIcon={<GoogleIcon />} style={{ marginTop: '8px', color: "black", fontFamily: "Montserrat", border: "1px solid #cccccc" }}>
+            Continue with Google
+          </Button>
+          <Button fullWidth variant="outlined" startIcon={<AppleIcon />} style={{ marginTop: '8px', color: "black", fontFamily: "Montserrat", border: "1px solid #cccccc" }}>
+            Continue with Apple
+          </Button>
         </DialogContent>
-      
-        
       </Dialog>
     </>
   );
