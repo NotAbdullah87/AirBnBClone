@@ -91,9 +91,14 @@ const MyListings = () => {
                   <Typography variant="body2" color="text.secondary">
                     {listing.description}
                   </Typography>
+                  <div style={{display:"flex",justifyContent:"space-between"}}>
                   <Typography variant="caption" color="text.secondary">
-                    {listing.startDate} - {listing.endDate}
+                    {listing.address} 
                   </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {listing.bedrooms} Bedrooms
+                  </Typography>
+                  </div>
                   <Typography><span style={{ fontWeight: "700" }}>${listing.price}</span> night</Typography>
                   <Button variant="outlined" onClick={() => handleEditClick(listing)} sx={{mt:"1rem",color:"black",fontFamily:"Montserrat",
                 border:"1px solid black"}}>Edit Listing</Button>

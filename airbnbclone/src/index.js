@@ -10,6 +10,7 @@ import {
 import UserDashboard from './userDashboard';
 import Step1 from './components/airbnbYourHome/step1';
 import MyListings from './components/myListings';
+import ListingDetailPage from './components/ListingDetail';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path : '/myListings',
     element : <MyListings />
+  },
+  {
+    path : "/listing/:id" ,
+    element : <ListingDetailPage /> 
   }
 ]);
 

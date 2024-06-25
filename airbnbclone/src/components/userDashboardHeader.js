@@ -162,7 +162,7 @@ const UserDashboardHeader = () => {
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           {/* Logo Section */}
           <Box sx={{ display: 'flex', alignItems: 'center', textAlign: "center" }}>
-            <img src={AirBnbLogo} style={{ width: "10rem" }} alt="Airbnb Logo" />
+           <Link to={'/dashboard'}><img src={AirBnbLogo} style={{ width: "10rem" }} alt="Airbnb Logo" /></Link> 
           </Box>
 
           {/* Middle Buttons Section for Larger Screens */}

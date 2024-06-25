@@ -128,6 +128,7 @@ const Step1 = () => {
       ...presence,
       [event.target.name]: event.target.checked,
     });
+    console.log(presence)
   };
   const handleImageLinkChange = (index, event) => {
     const newImageLinks = [...imageLinks];

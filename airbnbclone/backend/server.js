@@ -65,7 +65,32 @@ const User = mongoose.model('User', new mongoose.Schema({
 }));
 
 // Routes
+// Get all listings (remove filter by hostEmail)
+app.get('/api/getALLlistings', async (req, res) => {
+    try {
+      const listings = await Property.find();
+      res.json(listings);
+    } catch (error) {
+      console.error('Error fetching listings:', error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
 
+  // Express route to fetch a listing by ID
+app.get('/api/listings/:id', async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      const listing = await Property.findById(id);
+      if (!listing) {
+        return res.status(404).json({ message: 'Listing not found' });
+      }
+      res.json(listing);
+    } catch (error) {
+      console.error('Error fetching listing:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
 // Signup
 app.post('/signup', async (req, res) => {
   const { email, password ,phone,name} = req.body;
