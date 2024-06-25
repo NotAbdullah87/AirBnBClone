@@ -3,6 +3,7 @@ import './App.css';
 import Header from './components/header';
 import SearchSection from './components/searchSection';
 import MainSectionHero from './components/mainsectionHero';
+import Footer from './components/footer';
 
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
    </Container>
    <hr style={{fontSize:'10px',marginTop:"2rem",opacity:"20%"}}></hr>
    <MainSectionHero />
-
+    <Footer />
    </div>
   );
 }
