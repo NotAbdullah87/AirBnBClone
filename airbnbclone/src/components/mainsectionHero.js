@@ -43,7 +43,7 @@ const MainSectionHero = () => {
   const filteredProducts = productsData.filter(product => product.tags.includes(activeButton));
 
   return (
-    <Box sx={{ margin: 'auto', fontFamily: 'Montserrat !important', mt: "2rem" }}>
+    <Box sx={{ margin: 'auto', fontFamily: 'Montserrat !important', mt: "1rem" }}>
       <Swiper
         spaceBetween={5}
         breakpoints={{

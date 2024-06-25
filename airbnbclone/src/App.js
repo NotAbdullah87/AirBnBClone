@@ -12,6 +12,7 @@ function App() {
     <Container>
    <SearchSection  />
    </Container>
+   <hr style={{fontSize:'10px',marginTop:"2rem",opacity:"20%"}}></hr>
    <MainSectionHero />
 
    </div>
