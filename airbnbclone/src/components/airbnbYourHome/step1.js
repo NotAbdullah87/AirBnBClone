@@ -24,7 +24,9 @@ const icons = {
 
 const Step1 = () => {
     const navigate = useNavigate();
-  
+
+    const [title,setTitle] = useState('');
+    const [description,setDescription] = useState('');
     const [step, setStep] = useState(1);
   const [propertyType, setPropertyType] = useState('');
   const [guestType, setGuestType] = useState('');
@@ -48,12 +50,21 @@ const Step1 = () => {
     setAddress(e.target.value);
   };
 
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
+  };
+
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
+  };
   const handlePriceChange = (event, newValue) => {
     setPrice(newValue);
   };
 
   const handlePublish =async () => {
     const data = {
+        title,
+        description,
         propertyType,
         guestType,
         address,
@@ -72,7 +83,7 @@ const Step1 = () => {
         const response = await axios.post('http://localhost:5000/api/publishListing', data);
         console.log('Listing published successfully:', response.data);
         alert('Listing Publish Successful')
-        
+        navigate('/myListings')
         // Optionally, you can handle success feedback or navigate to another page
       } catch (error) {
         console.error('Error publishing listing:', error);
@@ -281,6 +292,22 @@ const Step1 = () => {
           />
             </Box>
             {/* Map component and address entry */}
+            <Typography>Enter Property Title</Typography>
+            <TextField
+            placeholder="enter title here .... "
+            fullWidth
+            value={title}
+            onChange={handleTitleChange}
+            sx={{ mt: 2 }}
+          />
+            <Typography>Enter Description</Typography>
+            <TextField
+            placeholder="enter description here ...."
+            fullWidth
+            value={description}
+            onChange={handleDescriptionChange}
+            sx={{ mt: 2 }}
+          />
             <Box mt={4} display="flex" justifyContent="space-between">
              <Button variant="contained" color="primary" onClick={handlePrevious} style={{backgroundColor:"black"}}>Previous</Button>
               <Button variant="contained" color="primary" onClick={handleNext} style={{backgroundColor:"black"}}>Next</Button>

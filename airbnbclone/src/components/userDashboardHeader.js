@@ -169,7 +169,7 @@ const UserDashboardHeader = () => {
           {!isSmallScreen && (
             <Box sx={{ display: 'flex', gap: 2 }}>
               <Button color="inherit" style={{ fontFamily: "Montserrat" }}>Stays</Button>
-              <Button color="inherit" style={{ fontFamily: "Montserrat" }}>Experiences</Button>
+              <Link to={'/myListings'}><Button color="inherit" style={{ fontFamily: "Montserrat",color:"black" }}>My Listings</Button></Link>
             </Box>
           )}
 

@@ -116,6 +116,8 @@ app.post('/logout', (req, res) => {
 
 // Define Schema and Model for Property Listing
 const PropertySchema = new mongoose.Schema({
+    title : String,
+    description : String,
     propertyType: String,
     guestType: String,
     address: String,
@@ -137,10 +139,36 @@ const PropertySchema = new mongoose.Schema({
   
   const Property = mongoose.model('Property', PropertySchema);
   
+  app.get('/api/listings', async (req, res) => {
+    const { hostEmail } = req.query;
+  
+    try {
+      const listings = await Property.find({ hostEmail });
+      res.json(listings);
+    } catch (error) {
+      console.error('Error fetching listings:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+  
+  app.put('/api/listings/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { title, description, price } = req.body;
+      const updatedListing = await Property.findByIdAndUpdate(id, { title, description, price }, { new: true });
+      res.json(updatedListing);
+    } catch (error) {
+      console.error('Error updating listing:', error);
+      res.status(500).json({ error: 'Failed to update listing' });
+    }
+  });
+  
   // POST endpoint to handle publishing a listing
   app.post('/api/publishListing', async (req, res) => {
     try {
       const {
+        title,
+        description,
         propertyType,
         guestType,
         address,
@@ -157,6 +185,8 @@ const PropertySchema = new mongoose.Schema({
   
       // Create new Property document
       const newProperty = new Property({
+        title,
+        description,
         propertyType,
         guestType,
         address,
@@ -181,6 +211,8 @@ const PropertySchema = new mongoose.Schema({
       res.status(500).json({ error: 'Failed to publish listing' });
     }
   });
+
+
 
 // Start server
 app.listen(PORT, () => {
