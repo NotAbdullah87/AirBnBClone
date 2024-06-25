@@ -32,7 +32,7 @@ import Snackbar from '@mui/material/Snackbar';
 import SnackbarContent from '@mui/material/SnackbarContent';
 import CloseIcon from '@mui/icons-material/Close';
 
-const Header = () => {
+const UserDashboardHeader = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate(); // Initialize useNavigate instead of useHistory
@@ -215,174 +215,16 @@ const Header = () => {
         keepMounted
         
       >
-        <MenuItem onClick={handleLoginOpen}>Login</MenuItem>
-        <MenuItem onClick={handleSignupOpen}>Sign Up</MenuItem>
-        
+        {/* <MenuItem onClick={handleLoginOpen}>Login</MenuItem>
+        <MenuItem onClick={handleSignupOpen}>Sign Up</MenuItem> */}
+        <MenuItem >Profile</MenuItem>
+        <MenuItem >Settings</MenuItem>
+        <MenuItem>Logout</MenuItem>
       </Menu>
 
-      {/* Snackbar for Notifications */}
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <SnackbarContent
-          sx={{
-            backgroundColor: snackbarSeverity === 'error' ? theme.palette.error.dark : theme.palette.success.dark,
-            color: 'white',
-            fontWeight: 'bold',
-          }}
-          message={snackbarMessage}
-          action={
-            <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackbarClose}>
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          }
-        />
-      </Snackbar>
-
-      {/* Signup Dialog */}
-      <Dialog
-        open={signupOpen}
-        onClose={handleSignupClose}
-        maxWidth="md"
-        fullWidth
-        sx={{ '& .MuiDialog-paper': { minHeight: '450px', width: "450px" } }}
-      >
-        <DialogTitle><Typography sx={{ fontFamily: "Montserrat", fontWeight: "700" }}>{phoneStep ? 'Sign Up' : 'Sign Up Details'}</Typography></DialogTitle>
-        <hr></hr>
-        <DialogContent>
-          <Typography sx={{ fontFamily: "Montserrat", fontWeight: '700', fontSize: "1.5rem" }}>Welcome to AirBnb</Typography>
-          <DialogContentText>
-            <Typography sx={{ fontFamily: "Montserrat" }}>{phoneStep ? 'Enter your phone number to continue.' : 'Enter your details to complete the signup.'}</Typography>
-          </DialogContentText>
-          {phoneStep ? (
-            <PhoneInput
-              country={'us'}
-              value={formData.phone}
-              onChange={handlePhoneChange}
-              inputProps={{
-                name: 'phone',
-                required: true,
-                autoFocus: true
-              }}
-            />
-          ) : (
-            <>
-              <TextField
-                autoFocus
-                margin="dense"
-                name="email"
-                label="Email Address"
-                type="email"
-                fullWidth
-                variant="standard"
-                value={formData.email}
-                onChange={handleChange}
-              />
-              <TextField
-                margin="dense"
-                name="name"
-                label="Name"
-                type="text"
-                fullWidth
-                variant="standard"
-                value={formData.name}
-                onChange={handleChange}
-              />
-              <TextField
-                margin="dense"
-                name="password"
-                label="Password"
-                type="password"
-                fullWidth
-                variant="standard"
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </>
-          )}
-
-          <Typography sx={{ fontSize: "0.7rem", mt: "1rem", fontFamily: "Montserrat" }}>We’ll call or text you to confirm your number. Standard message and data rates apply. <span style={{ fontWeight: 700 }}>Privacy Policy</span></Typography>
-          <Box width="100%" textAlign={'center'} sx={{ mt: "1rem" }}>
-            <Button
-              variant="contained"
-              onClick={phoneStep ? handleContinue : handleSignupSubmit}
-              sx={{
-                backgroundColor: phoneStep ? "var(--red)" : undefined,
-                color: phoneStep ? "white" : undefined,
-                marginBottom: '8px', // Add space between buttons
-                width: "100%"
-              }}
-            >
-              {phoneStep ? 'Continue' : 'Sign Up'}
-            </Button>
-          </Box>
-
-          <Typography textAlign={'center'}>or</Typography>
-          <Button fullWidth variant="outlined" startIcon={<FacebookIcon />} style={{ marginTop: '8px', color: "black", fontFamily: "Montserrat", border: "1px solid #cccccc" }}>
-            Continue with Facebook
-          </Button>
-          <Button fullWidth variant="outlined" startIcon={<GoogleIcon />} style={{ marginTop: '8px', color: "black", fontFamily: "Montserrat", border: "1px solid #cccccc" }}>
-            Continue with Google
-          </Button>
-          <Button fullWidth variant="outlined" startIcon={<AppleIcon />} style={{ marginTop: '8px', color: "black", fontFamily: "Montserrat", border: "1px solid #cccccc" }}>
-            Continue with Apple
-          </Button>
-        </DialogContent>
-      </Dialog>
-
-      {/* Login Dialog */}
-      <Dialog open={loginOpen} onClose={handleLoginClose} style={{ fontFamily: "Montserrat" }}>
-        <DialogTitle>Login</DialogTitle>
-        <DialogContent>
-          <Typography sx={{ fontFamily: "Montserrat", fontWeight: '700', fontSize: "1.5rem" }}>Welcome to AirBnb</Typography>
-          <DialogContentText>
-            Enter your email or phone number and password to login.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            name="email"
-            label="Email Address or Phone Number"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={formData.email}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            name="password"
-            label="Password"
-            type="password"
-            fullWidth
-            variant="standard"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          <Button onClick={handleLoginSubmit} sx={{
-            backgroundColor: phoneStep ? "var(--red)" : undefined,
-            color: phoneStep ? "white" : undefined,
-            marginBottom: '8px', // Add space between buttons
-            width: "100%",
-            mt: "1rem"
-          }}>Login</Button>
-          <Typography textAlign={'center'}>or</Typography>
-          <Button fullWidth variant="outlined" startIcon={<FacebookIcon />} style={{ marginTop: '8px', color: "black", fontFamily: "Montserrat", border: "1px solid #cccccc" }}>
-            Continue with Facebook
-          </Button>
-          <Button fullWidth variant="outlined" startIcon={<GoogleIcon />} style={{ marginTop: '8px', color: "black", fontFamily: "Montserrat", border: "1px solid #cccccc" }}>
-            Continue with Google
-          </Button>
-          <Button fullWidth variant="outlined" startIcon={<AppleIcon />} style={{ marginTop: '8px', color: "black", fontFamily: "Montserrat", border: "1px solid #cccccc" }}>
-            Continue with Apple
-          </Button>
-        </DialogContent>
-      </Dialog>
+  
     </>
   );
 };
 
-export default Header;
+export default UserDashboardHeader;
