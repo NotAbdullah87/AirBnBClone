@@ -38,11 +38,11 @@ const Header = () => {
       <AppBar position="fixed" sx={{ top: 0, backgroundColor: 'white', color: 'black', boxShadow: "none" }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           {/* Logo Section */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' ,textAlign:"center"}}>
             <img src={AirBnbLogo} style={{ width: "10rem" }} alt="Airbnb Logo" />
           </Box>
 
-          {/* Search Bar on Small Screens */}
+          {/* Search Bar on Small Screens
           {isSmallScreen && (
             <TextField
               variant="outlined"
@@ -51,13 +51,13 @@ const Header = () => {
               sx={{ width: '60%' }}
             />
             
-          )}
+          )} */}
 
           {/* Middle Buttons Section for Larger Screens */}
           {!isSmallScreen && (
             <Box sx={{ display: 'flex', gap: 2 }}>
-              <Button color="inherit">Stays</Button>
-              <Button color="inherit">Experiences</Button>
+              <Button color="inherit" style={{fontFamily:"Montserrat"}}>Stays</Button>
+              <Button color="inherit" style={{fontFamily:"Montserrat"}}>Experiences</Button>
             </Box>
           )}
 
@@ -85,13 +85,13 @@ const Header = () => {
         <AppBar position="fixed" sx={{ top: 'auto', bottom: 0, backgroundColor: 'white', color: 'black' }}>
           <Toolbar sx={{ display: 'flex', justifyContent: 'space-around' }}>
             <IconButton color="inherit">
-              <SearchIcon />
+              <SearchIcon style={{color:"#FF5A5F"}} />
             </IconButton>
             <IconButton color="inherit">
-              <FavoriteIcon />
+              <FavoriteIcon style={{color:"#FF5A5F"}} />
             </IconButton>
             <IconButton color="inherit" onClick={handleMenuOpen}>
-              <AccountCircleIcon />
+              <AccountCircleIcon style={{color:"#FF5A5F"}} />
             </IconButton>
           </Toolbar>
         </AppBar>

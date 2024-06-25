@@ -2,6 +2,7 @@ import { Container, Typography } from '@mui/material';
 import './App.css';
 import Header from './components/header';
 import SearchSection from './components/searchSection';
+import MainSectionHero from './components/mainsectionHero';
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
     <Container>
    <SearchSection  />
    </Container>
+   <MainSectionHero />
 
    </div>
   );
