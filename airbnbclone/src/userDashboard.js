@@ -5,6 +5,7 @@ import { Container, Typography, TextField, Grid, Card, CardContent, CardMedia, I
 import StarIcon from '@mui/icons-material/Star';
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
+import Favorite from '@mui/icons-material/Favorite';
 
 const UserDashboard = () => {
   const [listings, setListings] = useState([]);
@@ -100,41 +101,55 @@ const UserDashboard = () => {
         <Grid container spacing={2} sx={{ marginTop: '16px' }}>
           {filteredListings.map((listing) => (
             <Grid key={listing._id} item xs={12} sm={6} md={4} lg={4}>
-                 <Link to={`/listing/${listing._id}`} style={{ textDecoration: 'none' }}>
-              <Card sx={{ borderRadius: '8px', boxShadow: 'none' }}>
-                <CardMedia
-                  component="img"
-                  image={listing.imageLinks[0]}
-                  alt={listing.title}
-                  sx={{ height: 250, objectFit: 'cover' }}
-                />
-                <CardContent>
-                  <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <Typography textAlign={'left'} variant="h6" fontFamily={'Montserrat'}>{listing.title}</Typography>
-                    <span style={{ display: "flex" }}>
-                      <StarIcon />
-                      <Typography>{listing.rating}</Typography>
-                    </span>
-                  </div>
-                  <Typography variant="body2" color="text.secondary">
-                    {listing.description}
+              <Link to={`/listing/${listing._id}`} style={{ textDecoration: 'none' }}>
+            <Card sx={{ position: 'relative', borderRadius: '8px', boxShadow: 'none' }}>
+              <CardMedia
+                component="img"
+                image={listing.imageLinks[0]}
+                alt={listing.title}
+                sx={{ height: 250, objectFit: 'cover' }}
+              />
+              {/* Favorite icon */}
+              <Favorite
+                style={{
+                  position: 'absolute',
+                  top: '10px', // Adjust as per your design
+                  right: '10px', // Adjust as per your design
+                  zIndex: 1,
+                  color: 'var(--red)',
+                  backgroundColor: 'white'
+                  ,borderRadius:"100px",
+                  padding:"3px",
+                  opacity:"50%"
+                }}
+              />
+              <CardContent>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography textAlign={'left'} variant="h6" fontFamily={'Montserrat'}>
+                    {listing.title}
                   </Typography>
-                  <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <Typography variant="caption" color="text.secondary">
-                      {listing.address}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {listing.bedrooms} Bedrooms
-                    </Typography>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <StarIcon />
+                    <Typography>{listing.rating}</Typography>
                   </div>
-                  <Typography><span style={{ fontWeight: "700" }}>${listing.price}</span> night</Typography>
-                  {/* Button or Link to Detail Page */}
-               
-                    
-                 
-                </CardContent>
-              </Card>
-              </Link>
+                </div>
+                <Typography variant="body2" color="text.secondary">
+                  {listing.description}
+                </Typography>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant="caption" color="text.secondary">
+                    {listing.address}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {listing.bedrooms} Bedrooms
+                  </Typography>
+                </div>
+                <Typography>
+                  <span style={{ fontWeight: '700' }}>${listing.price}</span> night
+                </Typography>
+              </CardContent>
+            </Card>
+          </Link>
             </Grid>
           ))}
         </Grid>

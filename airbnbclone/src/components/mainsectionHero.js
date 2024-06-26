@@ -11,16 +11,16 @@ import StarIcon from '@mui/icons-material/Star';
 import axios from 'axios';
 import '../index.css';
 import { Link } from 'react-router-dom';
-
+import Favorite from '@mui/icons-material/Favorite';
 const MainSectionHero = () => {
     const [activeButton, setActiveButton] = useState('Beach');
     const [products, setProducts] = useState([]);
 
     const buttons = [
-        { id: 'Beach', icon: <BeachAccessIcon />, text: 'Beach' },
-        { id: 'locations', icon: <LocationOnIcon />, text: 'Locations' },
-        { id: 'events', icon: <EventIcon />, text: 'Events' },
-        { id: 'people', icon: <PeopleAltIcon />, text: 'People' },
+        { id: 'Beach', icon: <BeachAccessIcon sx={{color:"#cccccc"}} />, text: 'Beach' },
+        { id: 'locations', icon: <LocationOnIcon   sx={{color:"#cccccc"}}/>, text: 'Locations' },
+        { id: 'events', icon: <EventIcon   sx={{color:"#cccccc"}}/>, text: 'Events' },
+        { id: 'people', icon: <PeopleAltIcon  sx={{color:"#cccccc"}} />, text: 'People' },
     ];
 
     useEffect(() => {
@@ -85,30 +85,55 @@ const MainSectionHero = () => {
            
                 {products.map((product) => (
                     <Grid key={product.id} item xs={12} sm={6} md={4} lg={4}>
-                        <Link to={`/listing/${product._id}`} style={{ textDecoration: 'none' }}>
-                        <Card sx={{ borderRadius: '8px', boxShadow: 'none' }}>
-                            <CardMedia
-                                component="img"
-                                image={product.imageLinks}
-                                alt={product.title}
-                                sx={{ height: 250, objectFit: 'cover' }}
-                            />
-                            <CardContent>
-                                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                    <Typography textAlign={'left'} variant="h6" fontFamily={'Montserrat'}>{product.title}</Typography>
-                                    <span style={{ display: "flex" }}> <StarIcon />
-                                        <Typography>{product.rating}</Typography></span>
-                                </div>
-                                <Typography variant="body2" color="text.secondary">
-                                    {product.description}
-                                </Typography>
-                                <Typography variant="caption" color="text.secondary">
-                                    {product.address} - {product.endDate}
-                                </Typography>
-                                <Typography><span style={{ fontWeight: "700" }}>${product.price}</span> night</Typography>
-                            </CardContent>
-                        </Card>
-                        </Link>
+                          <Link to={`/listing/${product._id}`} style={{ textDecoration: 'none' }}>
+            <Card sx={{ position: 'relative', borderRadius: '8px', boxShadow: 'none' }}>
+              <CardMedia
+                component="img"
+                image={product.imageLinks[0]}
+                alt={product.title}
+                sx={{ height: 250, objectFit: 'cover' }}
+              />
+              {/* Favorite icon */}
+              <Favorite
+                style={{
+                  position: 'absolute',
+                  top: '10px', // Adjust as per your design
+                  right: '10px', // Adjust as per your design
+                  zIndex: 1,
+                  color: 'var(--red)',
+                  backgroundColor: 'white'
+                  ,borderRadius:"100px",
+                  padding:"3px",
+                  opacity:"50%"
+                }}
+              />
+              <CardContent>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography textAlign={'left'} variant="h6" fontFamily={'Montserrat'}>
+                    {product.title}
+                  </Typography>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <StarIcon />
+                    <Typography>{product.rating}</Typography>
+                  </div>
+                </div>
+                <Typography variant="body2" color="text.secondary">
+                  {product.description}
+                </Typography>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant="caption" color="text.secondary">
+                    {product.address}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {product.bedrooms} Bedrooms
+                  </Typography>
+                </div>
+                <Typography>
+                  <span style={{ fontWeight: '700' }}>${product.price}</span> night
+                </Typography>
+              </CardContent>
+            </Card>
+          </Link>
                     </Grid>
 
                     

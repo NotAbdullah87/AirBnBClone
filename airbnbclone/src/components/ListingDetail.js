@@ -26,6 +26,24 @@ const ListingDetailPage = () => {
   const [modalOpen, setModalOpen] = useState(false); // State for modal visibility
   const [userName, setUserName] = useState(''); // State for user name input
   const [userContact, setUserContact] = useState(''); // State for user contact input
+  const [message, setMessage] = useState(''); // State for message input
+  const [messages, setMessages] = useState([]); // State for storing messages
+  const [messageError, setMessageError] = useState(''); // State for message input validation
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track user login status
+
+  useEffect(() => {
+    // Check if user is logged in on component mount
+    const checkLoggedInStatus = () => {
+      const user = localStorage.getItem('userEmail'); // Assuming user login details are stored in localStorage
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkLoggedInStatus();
+  }, []);
 
   // Fetch listing details on component mount
   useEffect(() => {
@@ -33,6 +51,8 @@ const ListingDetailPage = () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/listings/${id}`);
         setListing(response.data);
+        // Optionally, fetch messages for this listing
+        fetchMessagesForListing(id);
       } catch (error) {
         console.error('Error fetching listing details:', error);
       }
@@ -40,6 +60,16 @@ const ListingDetailPage = () => {
 
     fetchListing();
   }, [id]);
+
+  // Fetch messages for the current listing from the backend
+  const fetchMessagesForListing = async (listingId) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/messages/${listingId}`);
+      setMessages(response.data);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
 
   // Function to handle guest count change
   const handleGuestsChange = (event) => {
@@ -56,8 +86,20 @@ const ListingDetailPage = () => {
     setModalOpen(false);
   };
 
-  // Function to handle reserve action
+  // Function to handle message input change
+  const handleMessageChange = (event) => {
+    setMessage(event.target.value);
+    setMessageError('');
+  };
+
+  // Function to handle reservation
   const handleReserve = async () => {
+    if (!isLoggedIn) {
+      alert('Please log in to make a reservation.');
+      // Optionally, redirect to login page
+      return;
+    }
+
     try {
       // Make a POST request to store the reservation
       const response = await axios.post('http://localhost:5000/api/reservations', {
@@ -77,6 +119,42 @@ const ListingDetailPage = () => {
       handleModalClose();
     } catch (error) {
       console.error('Error storing reservation:', error);
+      // Handle error (e.g., display error message)
+    }
+  };
+
+  // Function to validate and send message
+  const handleSendMessage = async () => {
+    if (!isLoggedIn) {
+      alert('Please log in to send a message.');
+      // Optionally, redirect to login page
+      return;
+    }
+
+    if (!message.trim()) {
+      setMessageError('Message cannot be empty');
+      return;
+    }
+
+    try {
+      // Make a POST request to store the message
+      const response = await axios.post('http://localhost:5000/api/messages', {
+        listingId: listing._id,
+        userEmail: 'user@example.com', // Replace with actual user email (if available in your app)
+        userName: userName,
+        message: message
+      });
+
+      console.log('Message sent:', response.data); // Log the response from the server
+
+      // Add the new message to the messages state
+      setMessages([...messages, response.data]);
+
+      // Clear the message input and close the modal
+      setMessage('');
+      handleModalClose();
+    } catch (error) {
+      console.error('Error sending message:', error);
       // Handle error (e.g., display error message)
     }
   };
@@ -157,7 +235,7 @@ const ListingDetailPage = () => {
           {/* Text on the right side */}
           <Grid item xs={12} sm={6} sx={{ fontFamily: 'Montserrat' }}>
             <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-              <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom>
                 ${listing.price} per night
               </Typography>
               <TextField
@@ -211,10 +289,9 @@ const ListingDetailPage = () => {
       <Modal
         open={modalOpen}
         onClose={handleModalClose}
-        aria-labelledby="reservation-modal-title"
         aria-describedby="reservation-modal-description"
         closeAfterTransition
-        
+        // BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500
         }}
@@ -257,6 +334,40 @@ const ListingDetailPage = () => {
           </Box>
         </Fade>
       </Modal>
+
+      {/* Chatbox section */}
+      <Container sx={{ py: 4 }}>
+        <Typography variant="h5" gutterBottom>
+          Send Message to Host
+        </Typography>
+        <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+          {/* Display messages */}
+          {messages.map((msg, index) => (
+            <div key={index} style={{ marginBottom: '1rem' }}>
+              <Typography variant="body1">
+                <span style={{ fontWeight: 'bold' }}>{msg.userName}: </span>
+                {msg.message}
+              </Typography>
+            </div>
+          ))}
+          {/* Input for new message */}
+          <TextField
+            fullWidth
+            multiline
+            rows={3}
+            variant="outlined"
+            placeholder="Type your message..."
+            value={message}
+            onChange={handleMessageChange}
+            error={!!messageError}
+            helperText={messageError}
+            sx={{ mt: 2 }}
+          />
+          <Button variant="contained" onClick={handleSendMessage} sx={{ backgroundColor: 'var(--red)', mt: 2 }}>
+            Send
+          </Button>
+        </Paper>
+      </Container>
     </Container>
   );
 };

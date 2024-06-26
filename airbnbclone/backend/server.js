@@ -267,6 +267,53 @@ const PropertySchema = new mongoose.Schema({
     }
   });
   
+  const messageSchema = new mongoose.Schema({
+    listingId: { type: String, required: true },
+    userEmail: { type: String, required: true },
+    userName: { type: String, required: false },
+    message: { type: String, required: true },
+    timestamp: { type: Date, default: Date.now }
+  });
+
+  const Message = mongoose.model('Message', messageSchema);
+
+// Endpoint to clear messages for a listing
+app.delete('/api/messages/clear', (req, res) => {
+  const { listingId } = req.query;
+  messages = Message.filter(msg => msg.listingId !== listingId);
+  res.json({ message: 'Messages cleared successfully' });
+  // console.log(res)
+});
+
+// Fetch messages for a listing
+app.get('/api/messages/:listingId', async (req, res) => {
+  try {
+    const messages = await Message.find({ listingId: req.params.listingId });
+    res.json(messages);
+    // console.log(messages)
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+// Store a new message
+app.post('/api/messages', async (req, res) => {
+  try {
+    const { listingId, userEmail, userName, message } = req.body;
+    const newMessage = new Message({
+      listingId,
+      userEmail,
+      userName,
+      message
+    });
+    const savedMessage = await newMessage.save();
+    res.status(201).json(savedMessage);
+  } catch (error) {
+    console.error('Error storing message:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
   // POST endpoint to handle publishing a listing
   app.post('/api/publishListing', async (req, res) => {
     try {
