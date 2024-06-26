@@ -10,6 +10,8 @@ import StarIcon from '@mui/icons-material/Star';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import Favorite from '@mui/icons-material/Favorite';
+import VillaIcon from '@mui/icons-material/Villa';
+import PoolIcon from '@mui/icons-material/Pool';
 
 // Import SearchBar component
 import SearchBar from './components/searchSection'; // Adjust the path as per your project structure
@@ -36,6 +38,8 @@ const MainSectionHero = () => {
     { id: 'locations', icon: <LocationOnIcon sx={{ color: "#cccccc" }} />, text: 'Locations' },
     { id: 'events', icon: <EventIcon sx={{ color: "#cccccc" }} />, text: 'Events' },
     { id: 'people', icon: <PeopleAltIcon sx={{ color: "#cccccc" }} />, text: 'People' },
+    { id: 'Villa', icon: <VillaIcon sx={{ color: "#cccccc" }} />, text: 'Villa' },
+    { id: 'Pool', icon: <PoolIcon sx={{ color: "#cccccc" }} />, text: 'Pool' },
   ];
 
   useEffect(() => {
