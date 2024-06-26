@@ -30,11 +30,13 @@ const ListingDetailPage = () => {
   const [messages, setMessages] = useState([]); // State for storing messages
   const [messageError, setMessageError] = useState(''); // State for message input validation
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track user login status
-
+  const [email,setEmail] = useState('')
   useEffect(() => {
     // Check if user is logged in on component mount
+  
     const checkLoggedInStatus = () => {
-      const user = localStorage.getItem('userEmail'); // Assuming user login details are stored in localStorage
+      const user = localStorage.getItem('userEmail')
+      setEmail(localStorage.getItem('userEmail')) // Assuming user login details are stored in localStorage
       if (user) {
         setIsLoggedIn(true);
       } else {
@@ -95,6 +97,7 @@ const ListingDetailPage = () => {
   // Function to handle reservation
   const handleReserve = async () => {
     if (!isLoggedIn) {
+      alert(email)
       alert('Please log in to make a reservation.');
       // Optionally, redirect to login page
       return;
@@ -104,7 +107,7 @@ const ListingDetailPage = () => {
       // Make a POST request to store the reservation
       const response = await axios.post('http://localhost:5000/api/reservations', {
         listingId: listing._id,
-        userEmail: 'user@example.com', // Replace with actual user email (if available in your app)
+        userEmail: email, // Replace with actual user email (if available in your app)
         userName: userName,
         userContact: userContact,
         hostEmail: listing.hostEmail,
@@ -140,7 +143,7 @@ const ListingDetailPage = () => {
       // Make a POST request to store the message
       const response = await axios.post('http://localhost:5000/api/messages', {
         listingId: listing._id,
-        userEmail: 'user@example.com', // Replace with actual user email (if available in your app)
+        userEmail: email, // Replace with actual user email (if available in your app)
         userName: userName,
         message: message
       });

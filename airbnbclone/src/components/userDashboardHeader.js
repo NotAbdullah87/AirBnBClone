@@ -173,7 +173,7 @@ const UserDashboardHeader = () => {
           {/* Middle Buttons Section for Larger Screens */}
           {!isSmallScreen && (
             <Box sx={{ display: 'flex', gap: 2 }}>
-              <Button color="inherit" style={{ fontFamily: "Montserrat" }}>Stays</Button>
+               <Link to={'/myStays'}><Button color="inherit" style={{ fontFamily: "Montserrat",color:"black" }}></Button><Button color="inherit" style={{ fontFamily: "Montserrat" ,color:"black"}}>Stays</Button></Link>
               <Link to={'/myListings'}><Button color="inherit" style={{ fontFamily: "Montserrat",color:"black" }}>My Listings</Button></Link>
             </Box>
           )}
@@ -203,19 +203,25 @@ const UserDashboardHeader = () => {
         <AppBar position="fixed" sx={{ top: 'auto', bottom: 0, backgroundColor: 'white', color: 'black' }}>
           <Toolbar sx={{ display: 'flex', justifyContent: 'space-around' }}>
             <IconButton color="inherit">
-              <SearchIcon style={{ color: "black" }} />
+              <Link to={'/dashboard'}><SearchIcon style={{ color: "black" }} /></Link>
             </IconButton>
             <IconButton color="inherit">
-              <FavoriteIcon style={{ color: "var(--red)" }} />
+             <Link to={'/myListings'}><FavoriteIcon style={{ color: "var(--red)" }} /></Link> 
             </IconButton>
             <IconButton color="inherit" onClick={handleMenuOpen}>
               <AccountCircleIcon style={{ color: "var(--red)" }} />
             </IconButton>
           </Toolbar>
+       
+       
+        
+
+       
         </AppBar>
       )}
 
       {/* User Menu */}
+      {!isSmallScreen && (
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -229,6 +235,29 @@ const UserDashboardHeader = () => {
         <MenuItem >Settings</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
+
+)}
+
+
+      {/* User Menu */}
+      {isSmallScreen && (
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+        keepMounted
+        
+      >
+        {/* <MenuItem onClick={handleLoginOpen}>Login</MenuItem>
+        <MenuItem onClick={handleSignupOpen}>Sign Up</MenuItem> */}
+        <MenuItem >Profile</MenuItem>
+        <MenuItem >Settings</MenuItem>
+        <Link to={'/list/step1'} style={{textDecoration:"none",color:"black"}}><MenuItem >AirBnb Your Home</MenuItem></Link>
+        <MenuItem >My Stays</MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+      </Menu>
+
+)}
 
     </>
   );
