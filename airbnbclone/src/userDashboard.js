@@ -1,161 +1,189 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Assuming you use React Router for navigation
-import UserDashboardHeader from './components/userDashboardHeader';
-import { Container, Typography, TextField, Grid, Card, CardContent, CardMedia, InputAdornment,Button } from '@mui/material';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/bundle';
+import { Grid, Typography, Box, Card, CardContent, CardMedia } from '@mui/material';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import EventIcon from '@mui/icons-material/Event';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import StarIcon from '@mui/icons-material/Star';
-import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 import Favorite from '@mui/icons-material/Favorite';
 
-const UserDashboard = () => {
-  const [listings, setListings] = useState([]);
-  const [filteredListings, setFilteredListings] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterPrice, setFilterPrice] = useState('');
+// Import SearchBar component
+import SearchBar from './components/searchSection'; // Adjust the path as per your project structure
+import Footer from './components/footer';
+import UserDashboardHeader from './components/userDashboardHeader';
+
+const MainSectionHero = () => {
+
+  let navigate = useNavigate()
+   // Check if userEmail exists in local storage
+   const userEmail = localStorage.getItem('userEmail');
+   if (!userEmail) {
+     // Navigate back to '/'
+     navigate('/');
+   }
+
+  const [activeButton, setActiveButton] = useState('Beach');
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+
+  // Define buttons array for category selection
+  const buttons = [
+    { id: 'Beach', icon: <BeachAccessIcon sx={{ color: "#cccccc" }} />, text: 'Beach' },
+    { id: 'locations', icon: <LocationOnIcon sx={{ color: "#cccccc" }} />, text: 'Locations' },
+    { id: 'events', icon: <EventIcon sx={{ color: "#cccccc" }} />, text: 'Events' },
+    { id: 'people', icon: <PeopleAltIcon sx={{ color: "#cccccc" }} />, text: 'People' },
+  ];
 
   useEffect(() => {
-    fetchListings();
+    // Fetch the data from the API
+    axios.get('http://localhost:5000/api/getALLlistings')
+      .then(response => {
+        setProducts(response.data);
+        setFilteredProducts(response.data); // Initialize filtered products with all products
+      })
+      .catch(error => {
+        console.error("There was an error fetching the listings!", error);
+      });
   }, []);
 
-  const fetchListings = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/getALLlistings');
-      setListings(response.data);
-      setFilteredListings(response.data); // Initialize filtered listings with all listings
-    } catch (error) {
-      console.error('Error fetching listings:', error);
+  const onSearch = (location, priceFilter) => {
+    // Example logic to filter products by location and price
+    let filtered = products;
+    if (products) {
+      filtered = products.filter(product => {
+        // Check if product.address exists and includes location
+        console.log(product.address,location)
+        return (
+            
+            product.title.toLowerCase().includes(location.toLowerCase()) ||
+            product.address.toLowerCase().includes(location.toLowerCase()) &&  product.price <= parseInt(priceFilter)
+        //   product.title && product.title.toLowerCase().includes(location.toLowerCase()) &&
+        //   product.price <= parseInt(priceFilter)
+        );
+      });
     }
+    setFilteredProducts(filtered);
   };
 
-  useEffect(() => {
-    applyFilters();
-  }, [listings, filterPrice, searchTerm]);
-
-  const applyFilters = () => {
-    let filtered = listings;
-
-    // Filter by search term (assuming it matches title or location)
-    if (searchTerm.trim() !== '') {
-      filtered = filtered.filter(listing =>
-       listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        listing.address.toLowerCase().includes(searchTerm.toLowerCase())
-        
-      );
-    }
-
-    // Filter by price
-    if (filterPrice.trim() !== '') {
-      filtered = filtered.filter(listing => listing.price <= parseInt(filterPrice));
-    }
-
-    setFilteredListings(filtered);
-  };
-
-  const handleSearchChange = event => {
-    setSearchTerm(event.target.value);
-  };
-
-  const handlePriceFilterChange = event => {
-    setFilterPrice(event.target.value);
+  const handleButtonClick = (buttonId) => {
+    setActiveButton(buttonId);
+    // Example logic to filter products based on buttonId (category)
+    // You can modify this logic based on your actual data structure
+    // const filtered = products.filter(product => {
+      // Example: Filtering by category
+    //   return product.category === buttonId;
+    // });
+    // setFilteredProducts(filtered);
   };
 
   return (
-    <>
+    <div>
       <UserDashboardHeader />
-      <Container sx={{ mt: '10rem' }}>
-        <Typography sx={{ fontFamily: "Montserrat", fontWeight: '700', mb: "2rem" }}>Find Your Next Destination</Typography>
-        {/* Search Bar */}
-        <TextField
-          label="Search by title or location"
-          fullWidth
-          value={searchTerm}
-          onChange={handleSearchChange}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <span style={{ backgroundColor: 'var(--red)', borderRadius: "10rem", paddingLeft: "1rem", paddingRight: "1rem", paddingTop: '0.3rem' }}> <SearchIcon sx={{ color: "white" }} /> </span>
-              </InputAdornment>
-            )
-          }}
-          sx={{ mt: '1rem' }}
-        />
+    <Box sx={{ margin: 'auto', fontFamily: 'Montserrat !important', mt: "1rem" }}>
+      {/* Include SearchBar component */}
+      <SearchBar onSearch={onSearch} />
 
-        {/* Price Filter */}
-        <TextField
-          type="number"
-          label="Filter by max price"
-          fullWidth
-          value={filterPrice}
-          onChange={handlePriceFilterChange}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                $
-              </InputAdornment>
-            )
-          }}
-          sx={{ mt: '1rem', width: 'fit-content' }}
-        />
-
-        {/* Listings */}
-        <Grid container spacing={2} sx={{ marginTop: '16px' }}>
-          {filteredListings.map((listing) => (
-            <Grid key={listing._id} item xs={12} sm={6} md={4} lg={4}>
-              <Link to={`/listing/${listing._id}`} style={{ textDecoration: 'none' }}>
-            <Card sx={{ position: 'relative', borderRadius: '8px', boxShadow: 'none' }}>
-              <CardMedia
-                component="img"
-                image={listing.imageLinks[0]}
-                alt={listing.title}
-                sx={{ height: 250, objectFit: 'cover' }}
-              />
-              {/* Favorite icon */}
-              <Favorite
-                style={{
-                  position: 'absolute',
-                  top: '10px', // Adjust as per your design
-                  right: '10px', // Adjust as per your design
-                  zIndex: 1,
-                  color: 'var(--red)',
-                  backgroundColor: 'white'
-                  ,borderRadius:"100px",
-                  padding:"3px",
-                  opacity:"50%"
-                }}
-              />
-              <CardContent>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography textAlign={'left'} variant="h6" fontFamily={'Montserrat'}>
-                    {listing.title}
-                  </Typography>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <StarIcon />
-                    <Typography>{listing.rating}</Typography>
-                  </div>
-                </div>
-                <Typography variant="body2" color="text.secondary">
-                  {listing.description}
+      {/* Swiper for category buttons */}
+      <Swiper
+        spaceBetween={5}
+        breakpoints={{
+          640: { slidesPerView: 4 },
+          768: { slidesPerView: 4 },
+          1024: { slidesPerView: 6 },
+        }}
+      >
+        {buttons.map((button) => (
+          <SwiperSlide key={button.id}>
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              spacing={1}
+              sx={{
+                borderRadius: '0px',
+                padding: '16px',
+                textAlign: 'center',
+                cursor: 'pointer',
+                borderBottom: activeButton === button.id ? '4px solid #000' : '0px solid #ccc',
+              }}
+              onClick={() => handleButtonClick(button.id)}
+            >
+              <Grid item>{button.icon}</Grid>
+              <Grid item>
+                <Typography align="center" variant="body1">
+                  {button.text}
                 </Typography>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant="caption" color="text.secondary">
-                    {listing.address}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {listing.bedrooms} Bedrooms
-                  </Typography>
-                </div>
-                <Typography>
-                  <span style={{ fontWeight: '700' }}>${listing.price}</span> night
-                </Typography>
-              </CardContent>
-            </Card>
-          </Link>
+              </Grid>
             </Grid>
-          ))}
-        </Grid>
-      </Container>
-    </>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+
+      {/* Display filtered products */}
+      <Grid container spacing={2} sx={{ marginTop: '16px' }}>
+        {filteredProducts.map((product) => (
+          <Grid key={product.id} item xs={12} sm={6} md={4} lg={4}>
+            <Link to={`/listing/${product._id}`} style={{ textDecoration: 'none' }}>
+              <Card sx={{ position: 'relative', borderRadius: '8px', boxShadow: 'none' }}>
+                <CardMedia
+                  component="img"
+                  image={product.imageLinks[0]}
+                  alt={product.title}
+                  sx={{ height: 250, objectFit: 'cover' }}
+                />
+                {/* Favorite icon */}
+                <Favorite
+                  style={{
+                    position: 'absolute',
+                    top: '10px',
+                    right: '10px',
+                    zIndex: 1,
+                    color: 'var(--red)',
+                    backgroundColor: 'white',
+                    borderRadius: "100px",
+                    padding: "3px",
+                    opacity: "50%"
+                  }}
+                />
+                <CardContent>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography textAlign={'left'} variant="h6" fontFamily={'Montserrat'}>
+                      {product.title}
+                    </Typography>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <StarIcon />
+                      <Typography>{product.rating}</Typography>
+                    </div>
+                  </div>
+                  <Typography variant="body2" color="text.secondary">
+                    {product.description}
+                  </Typography>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="caption" color="text.secondary">
+                      {product.address}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {product.bedrooms} Bedrooms
+                    </Typography>
+                  </div>
+                  <Typography>
+                    <span style={{ fontWeight: '700' }}>${product.price}</span> night
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Link>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
+
+    <Footer />
+    </div>
   );
 };
 
-export default UserDashboard;
+export default MainSectionHero;

@@ -192,6 +192,8 @@ const MyListings = () => {
   const [openMessagesDialog, setOpenMessagesDialog] = useState(false); // State to control messages dialog visibility
   const navigate = useNavigate();
 
+
+
   useEffect(() => {
     // Fetch listings on component mount
     fetchListings();
@@ -200,6 +202,13 @@ const MyListings = () => {
   const fetchListings = async () => {
     try {
       const hostEmail = localStorage.getItem('userEmail');
+     
+
+      if (!hostEmail) {
+        // Navigate back to '/'
+        navigate('/');
+      }
+   
       const response = await axios.get(`http://localhost:5000/api/listings?hostEmail=${hostEmail}`);
       setListings(response.data);
     } catch (error) {
