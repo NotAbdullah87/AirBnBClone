@@ -16,12 +16,12 @@ import {
 } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
 const MyListings = () => {
   const [listings, setListings] = useState([]);
   const [editListing, setEditListing] = useState(null); // State to manage currently edited listing
   const [openEditDialog, setOpenEditDialog] = useState(false); // State to control edit dialog visibility
-
+  const navigate = useNavigate();
   useEffect(() => {
     // Fetch listings on component mount
     fetchListings();
@@ -56,6 +56,9 @@ const MyListings = () => {
     }
   };
 
+  const handleViewMyReservations = () =>{
+    navigate('/viewReservations')
+  }
   const handleEditDialogClose = () => {
     setOpenEditDialog(false);
     setEditListing(null);
@@ -69,10 +72,14 @@ const MyListings = () => {
     <div>
       <UserDashboardHeader />
       <Container sx={{ mt: '10rem' }}>
+        <div style={{display:"flex",justifyContent:"space-between"}}>
         <Typography variant='h4' sx={{ fontFamily: 'Montserrat' }}>My Listings</Typography>
+        <Button variant="outlined" onClick={handleViewMyReservations} sx={{mt:"1rem",color:"black",fontFamily:"Montserrat",
+                border:"1px solid black"}}>View Reservations</Button>
+                </div>
         <Grid container spacing={2} sx={{ marginTop: '16px' }}>
           {listings.map((listing) => (
-            <Grid key={listing._id} item xs={12} sm={6} md={4} lg={3}>
+            <Grid key={listing._id} item xs={12} sm={6} md={4} lg={4}>
               <Card sx={{ borderRadius: '8px', boxShadow: 'none' }}>
                 <CardMedia
                   component="img"

@@ -7,14 +7,16 @@ import AppleIcon from '@mui/icons-material/Apple';
 const Footer = () => {
   return (
     <Box
+    fullwidth
       sx={{
         backgroundColor: '#f3f3f3',
         color: 'black',
         py: 6,
         borderTop: '1px solid #ddd',
+        margin : 0,
       }}
     >
-      <Container maxWidth="lg">
+      <Container fullwidth>
         <Grid container spacing={5}>
           {/* Section 1: Support */}
           <Grid item xs={12} md={4}>

@@ -11,6 +11,7 @@ import UserDashboard from './userDashboard';
 import Step1 from './components/airbnbYourHome/step1';
 import MyListings from './components/myListings';
 import ListingDetailPage from './components/ListingDetail';
+import HostReservationsPage from './components/hostReservationPage';
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,9 @@ const router = createBrowserRouter([
   {
     path : "/listing/:id" ,
     element : <ListingDetailPage /> 
+  },{
+    path : "/viewReservations",
+    element : <HostReservationsPage />
   }
 ]);
 

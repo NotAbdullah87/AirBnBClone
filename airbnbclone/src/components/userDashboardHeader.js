@@ -149,6 +149,11 @@ const UserDashboardHeader = () => {
     }
   };
 
+  const handleLogout = () => {
+    navigate('/')
+    localStorage.clear()
+  };
+
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -222,7 +227,7 @@ const UserDashboardHeader = () => {
         <MenuItem onClick={handleSignupOpen}>Sign Up</MenuItem> */}
         <MenuItem >Profile</MenuItem>
         <MenuItem >Settings</MenuItem>
-        <MenuItem>Logout</MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
 
     </>

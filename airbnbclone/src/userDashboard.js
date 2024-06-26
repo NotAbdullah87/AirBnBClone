@@ -36,8 +36,9 @@ const UserDashboard = () => {
     // Filter by search term (assuming it matches title or location)
     if (searchTerm.trim() !== '') {
       filtered = filtered.filter(listing =>
-        listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        listing.location.toLowerCase().includes(searchTerm.toLowerCase())
+       listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        listing.address.toLowerCase().includes(searchTerm.toLowerCase())
+        
       );
     }
 
@@ -98,7 +99,7 @@ const UserDashboard = () => {
         {/* Listings */}
         <Grid container spacing={2} sx={{ marginTop: '16px' }}>
           {filteredListings.map((listing) => (
-            <Grid key={listing._id} item xs={12} sm={6} md={4} lg={3}>
+            <Grid key={listing._id} item xs={12} sm={6} md={4} lg={4}>
                  <Link to={`/listing/${listing._id}`} style={{ textDecoration: 'none' }}>
               <Card sx={{ borderRadius: '8px', boxShadow: 'none' }}>
                 <CardMedia

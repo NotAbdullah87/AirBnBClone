@@ -76,6 +76,20 @@ app.get('/api/getALLlistings', async (req, res) => {
     }
   });
 
+  // New API endpoint to fetch reservations by host email
+app.get('/api/reservations/:hostEmail', async (req, res) => {
+  try {
+    const { hostEmail } = req.params;
+    const reservations = await Reservation.find({ hostEmail });
+
+    res.status(200).json(reservations);
+  } catch (error) {
+    console.error('Error fetching reservations:', error);
+    res.status(500).json({ error: 'Failed to fetch reservations' });
+  }
+});
+
+
   // API endpoint to fetch user's name by email
 app.get('/api/userName', async (req, res) => {
     const { email } = req.query;
