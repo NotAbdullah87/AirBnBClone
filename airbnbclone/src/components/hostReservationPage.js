@@ -54,12 +54,14 @@ const HostReservationsPage = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <Container>
+    <div>
+    <Container sx={{mb:"4rem"}}>
       <UserDashboardHeader />
-      <Container sx={{ mt: '2rem' }}>
+      <Container sx={{ mt: '10rem' }}>
         <Typography variant="h4" sx={{ fontFamily: 'Montserrat', fontWeight: '600', mb: '1rem' }}>
-          Reservations for Host
+         Your Reservations
         </Typography>
+        <Typography sx={{ fontFamily: 'Montserrat',mb:"1rem"}}>These are the reservations made on your listings</Typography>
         <Grid container spacing={3}>
           {reservations.length === 0 ? (
             <Typography variant="body1" sx={{ fontFamily: 'Montserrat' }}>
@@ -101,8 +103,10 @@ const HostReservationsPage = () => {
           )}
         </Grid>
       </Container>
-      <Footer />
+    
     </Container>
+      <Footer />
+      </div>
   );
 };
 

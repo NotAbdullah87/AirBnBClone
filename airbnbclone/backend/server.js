@@ -238,6 +238,7 @@ const PropertySchema = new mongoose.Schema({
     imageLinks: [String],
     price: Number,
     hostEmail: String,
+    rating : Number
   });
   
   const Property = mongoose.model('Property', PropertySchema);
@@ -302,6 +303,7 @@ const PropertySchema = new mongoose.Schema({
         imageLinks,
         price,
         hostEmail,
+        rating : 0,
       });
   
       // Save the property to MongoDB
